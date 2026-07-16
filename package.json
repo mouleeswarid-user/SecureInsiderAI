@@ -1,0 +1,17 @@
+{
+  "name": "secureinsiderai",
+  "version": "1.0.0",
+  "description": "AI-Based Insider Threat Detection System for Banking",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server -p 3000 -o"
+  },
+  "keywords": [
+    "banking",
+    "cybersecurity",
+    "insider-threat",
+    "ai-detection"
+  ],
+  "author": "SecureInsiderAI Team",
+  "license": "ISC"
+}

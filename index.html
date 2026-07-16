@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureInsiderAI - AI-Based Insider Threat Detection for Banking</title>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="brand-info">
+                    <h2>SecureInsider</h2>
+                    <span class="badge banking-badge">Banking AI</span>
+                </div>
+            </div>
+
+            <div class="sidebar-status">
+                <span class="status-dot green pulse" id="sidebar-status-dot"></span>
+                <span class="status-text" id="sidebar-status-text">SYSTEM SAFE</span>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active" data-tab="dashboard">
+                        <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                    </li>
+                    <li data-tab="monitoring">
+                        <i class="fa-solid fa-users-gear"></i><span>Employee Activity</span>
+                    </li>
+                    <li data-tab="alerts">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Security Alerts</span>
+                        <span class="menu-alert-badge" id="menu-alert-count">0</span>
+                    </li>
+                    <li data-tab="analytics">
+                        <i class="fa-solid fa-brain"></i><span>Risk Analytics</span>
+                    </li>
+                    <li data-tab="admin">
+                        <i class="fa-solid fa-user-shield"></i><span>Admin Panel</span>
+                    </li>
+                    <li data-tab="audit">
+                        <i class="fa-solid fa-terminal"></i><span>Secure Audit Logs</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="hackathon-tag">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Maharashtra Hackathon</span>
+                </div>
+                <div class="tagline">Demo Environment v2.1</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search employees, departments, locations..." id="global-search">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <!-- Quick actions -->
+                    <button class="btn btn-simulate" id="simulate-alert-btn">
+                        <i class="fa-solid fa-bug"></i> Simulate Threat
+                    </button>
+                    <div class="header-clock">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="live-time">14:08:00</span>
+                    </div>
+                    <div class="admin-profile">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="profile-details">
+                            <span class="profile-name">Admin (M Maharashtra)</span>
+                            <span class="profile-role">Chief Security Officer</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Panels -->
+            <div class="content-body">
+                
+                <!-- Tab: Dashboard -->
+                <section id="dashboard" class="tab-content active">
+                    <!-- Critical Alert Banner (Shown dynamically when threat is active) -->
+                    <div class="critical-alert-banner alert-hidden" id="critical-alert-banner">
+                        <div class="alert-icon-container">
+                            <i class="fa-solid fa-triangle-exclamation pulse"></i>
+                        </div>
+                        <div class="alert-info-container">
+                            <div class="alert-header">
+                                <span class="alert-title">CRITICAL INSIDER THREAT DETECTED</span>
+                                <span class="alert-badge-risk" id="banner-risk-score">92% Risk</span>
+                            </div>
+                            <p class="alert-msg" id="banner-alert-msg">Employee EMP009 (Treasury) downloading a large amount of customer records at unusual hours.</p>
+                            <div class="alert-details-row">
+                                <span><i class="fa-solid fa-user"></i> <strong id="banner-emp-name">Rahul Sharma</strong></span>
+                                <span><i class="fa-solid fa-network-wired"></i> IP: <strong id="banner-emp-ip">192.168.12.110</strong></span>
+                                <span><i class="fa-solid fa-location-dot"></i> Location: <strong id="banner-emp-loc">Pune (Unknown Device)</strong></span>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-danger-action" id="banner-block-btn">Block Account</button>
+                            <button class="btn btn-secondary-action" id="banner-dismiss-btn">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="card-icon blue">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="card-data">
+                                <h3>Total Employees</h3>
+                                <div class="value" id="stat-total-employees">250</div>
+                                <span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +12 this month</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon green">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="card-data">
+                                <h3>Active Users</h3>
+                                <div class="value" id="stat-active-users">184</div>
+                                <span class="trend safe"><span class="pulse-dot"></span> Live monitoring active</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon red">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            <div class="card-data">
+                                <h3>Total Alerts</h3>
+                                <div class="value" id="stat-total-alerts">8</div>
+                                <span class="trend danger" id="stat-active-alerts-text">2 unresolved threats</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon orange">
+                                <i class="fa-solid fa-user-ninja"></i>
+                            </div>
+                            <div class="card-data">
+                                <h3>High-Risk Employees</h3>
+                                <div class="value" id="stat-high-risk">3</div>
+                                <span class="trend warning"><i class="fa-solid fa-triangle-exclamation"></i> Risk score > 70%</span>
+                            </div>
+                        </div>
+                        <div class="stat-card risk-meter-card">
+                            <div class="card-data">
+                                <h3>AI Avg Risk Level</h3>
+                                <div class="gauge-container">
+                                    <svg viewBox="0 0 100 50" class="gauge-svg">
+                                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#223a5e" stroke-width="8" stroke-linecap="round"/>
+                                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#riskGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="80" id="gauge-fill"/>
+                                        <defs>
+                                            <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="#00D26A"/>
+                                                <stop offset="50%" stop-color="#FF8E2B"/>
+                                                <stop offset="100%" stop-color="#FF4B4B"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="gauge-value" id="avg-risk-text">36.5%</div>
+                                </div>
+                                <span class="trend text-center" id="avg-risk-status">SYSTEM STABLE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="charts-grid">
+                        <div class="chart-card double-width">
+                            <div class="chart-header">
+                                <h3>Daily Threat Detection & Login Activity</h3>
+                                <div class="chart-legends">
+                                    <span class="legend"><span class="color-dot blue"></span> Logins</span>
+                                    <span class="legend"><span class="color-dot red"></span> Anomalies</span>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="threatTrendChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Department-wise Risk Profile</h3>
+                                <span class="chart-subtitle">AI Anomaly Aggregation</span>
+                            </div>
+                            <div class="chart-body radar-adjust">
+                                <canvas id="deptRiskChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid margin-top-20">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Top Riskiest Employees</h3>
+                                <span class="chart-subtitle">Calculated by Neural Anomaly Model</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="employeeRiskChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card double-width">
+                            <div class="chart-header">
+                                <h3>Live AI Predictor Feed</h3>
+                                <div class="badge pulsing-badge font-small">
+                                    <span class="status-dot green pulse"></span> Real-time AI
+                                </div>
+                            </div>
+                            <div class="feed-container" id="live-predictive-feed">
+                                <!-- Feeds are generated here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Employee Activity -->
+                <section id="monitoring" class="tab-content">
+                    <div class="section-header-filters">
+                        <div class="section-title-area">
+                            <h2>Employee Activity Monitoring</h2>
+                            <p class="section-subtitle">Real-time inspection panel of banking access logs and anomalous actions</p>
+                        </div>
+                        <div class="filters-container">
+                            <div class="filter-group">
+                                <label for="filter-dept">Department:</label>
+                                <select id="filter-dept" class="styled-select">
+                                    <option value="all">All Departments</option>
+                                    <option value="IT & Security">IT & Security</option>
+                                    <option value="Retail Banking">Retail Banking</option>
+                                    <option value="Treasury & Forex">Treasury & Forex</option>
+                                    <option value="Wealth Management">Wealth Management</option>
+                                    <option value="Operations">Operations</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-risk">Risk Level:</label>
+                                <select id="filter-risk" class="styled-select">
+                                    <option value="all">All Scores</option>
+                                    <option value="high">High (> 70%)</option>
+                                    <option value="med">Medium (30% - 70%)</option>
+                                    <option value="low">Low (&lt; 30%)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monitoring Table and Sidebar Detail View -->
+                    <div class="monitoring-layout">
+                        <div class="table-container shadow-card">
+                            <table class="banking-table" id="employee-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee ID</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Login Time</th>
+                                        <th>Failed Logins</th>
+                                        <th>Files Accessed</th>
+                                        <th>Device Used</th>
+                                        <th>Location</th>
+                                        <th>Risk Score</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="employee-table-body">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Side Detail Card -->
+                        <div class="employee-detail-card" id="employee-detail-card">
+                            <div class="card-placeholder" id="detail-placeholder">
+                                <i class="fa-solid fa-user-magnifying-glass"></i>
+                                <p>Select an employee from the table to view their detailed timeline, activity patterns, and AI threat insights.</p>
+                            </div>
+                            <div class="detail-content hidden" id="detail-content">
+                                <div class="detail-header">
+                                    <div class="detail-profile-img">
+                                        <i class="fa-solid fa-user-shield"></i>
+                                    </div>
+                                    <div class="detail-meta">
+                                        <h3 id="detail-name">Amit Mishra</h3>
+                                        <span class="detail-id" id="detail-id">EMP014</span>
+                                        <span class="badge detail-dept-badge" id="detail-dept">Treasury</span>
+                                    </div>
+                                    <button class="btn btn-close-detail" id="close-detail-btn">&times;</button>
+                                </div>
+
+                                <div class="detail-risk-indicator">
+                                    <div class="indicator-bar-container">
+                                        <div class="indicator-title">AI Threat Index</div>
+                                        <div class="indicator-score" id="detail-risk-score">84%</div>
+                                    </div>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill red" id="detail-risk-progress" style="width: 84%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-stats-row">
+                                    <div class="detail-mini-stat">
+                                        <span class="label">Status</span>
+                                        <span class="value text-danger" id="detail-status">THREAT</span>
+                                    </div>
+                                    <div class="detail-mini-stat">
+                                        <span class="label">Files</span>
+                                        <span class="value" id="detail-files">142</span>
+                                    </div>
+                                    <div class="detail-mini-stat">
+                                        <span class="label">Device</span>
+                                        <span class="value font-small" id="detail-device">Windows</span>
+                                    </div>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>AI Security Warnings</h4>
+                                    <div class="anomalies-list" id="detail-anomalies">
+                                        <!-- List of anomalies -->
+                                    </div>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>Activity Timeline</h4>
+                                    <div class="timeline" id="detail-timeline">
+                                        <!-- Timeline items -->
+                                    </div>
+                                </div>
+
+                                <div class="detail-actions-footer">
+                                    <button class="btn btn-danger-action w-100" id="detail-action-btn">Block Employee Account</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Security Alerts -->
+                <section id="alerts" class="tab-content">
+                    <div class="section-header-filters">
+                        <div class="section-title-area">
+                            <h2>Security Alerts Hub</h2>
+                            <p class="section-subtitle">Real-time alerts generated by SecureInsiderAI anomaly detection models</p>
+                        </div>
+                        <div class="alerts-summary-badges">
+                            <span class="alert-pill critical"><i class="fa-solid fa-circle-exclamation"></i> <span id="alert-summary-critical">0</span> Critical</span>
+                            <span class="alert-pill warning"><i class="fa-solid fa-triangle-exclamation"></i> <span id="alert-summary-warning">0</span> Warning</span>
+                            <span class="alert-pill resolved"><i class="fa-solid fa-circle-check"></i> <span id="alert-summary-resolved">0</span> Blocked</span>
+                        </div>
+                    </div>
+
+                    <div class="alerts-container-grid">
+                        <div class="alerts-history-list">
+                            <h3>Alerts Feed</h3>
+                            <div class="alerts-list-wrapper" id="alerts-list-wrapper">
+                                <!-- Dynamically generated alerts list cards -->
+                            </div>
+                        </div>
+
+                        <div class="alerts-ai-analysis shadow-card">
+                            <h3>Insider Threat Risk Analysis</h3>
+                            <div class="ai-analysis-content" id="ai-analysis-details">
+                                <div class="analysis-placeholder">
+                                    <i class="fa-solid fa-brain"></i>
+                                    <p>Select an alert from the feed to view deeper AI risk analysis, network parameters, confidence ratings, and incident timelines.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Risk Analytics -->
+                <section id="analytics" class="tab-content">
+                    <div class="section-header-filters">
+                        <div class="section-title-area">
+                            <h2>AI Risk Analytics & Reports</h2>
+                            <p class="section-subtitle">Aggregated metrics, model accuracy parameters, and downloadable compliance dossiers</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-layout-grid">
+                        <!-- Left Panel: Stats and Matrix -->
+                        <div class="analytics-left-panel">
+                            <div class="analytics-subcard shadow-card">
+                                <h3>AI Engine Performance</h3>
+                                <div class="performance-grid">
+                                    <div class="perf-metric">
+                                        <span class="metric-label">Model Accuracy</span>
+                                        <span class="metric-val text-blue">98.4%</span>
+                                        <p class="metric-desc">Tested against historical banking insider threat data</p>
+                                    </div>
+                                    <div class="perf-metric">
+                                        <span class="metric-label">False Positive Rate</span>
+                                        <span class="metric-val text-green">0.12%</span>
+                                        <p class="metric-desc">Extremely low false alarm rates in daily work cycles</p>
+                                    </div>
+                                    <div class="perf-metric">
+                                        <span class="metric-label">Avg Threat Detection Speed</span>
+                                        <span class="metric-val text-blue">350ms</span>
+                                        <p class="metric-desc">Near instantaneous threat identification and lock-outs</p>
+                                    </div>
+                                    <div class="perf-metric">
+                                        <span class="metric-label">Confidence Threshold</span>
+                                        <span class="metric-val text-orange" id="analytics-confidence-threshold">85%</span>
+                                        <p class="metric-desc">Configured slider threshold for automatic response</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-subcard shadow-card margin-top-20">
+                                <h3>Risk Levels & Mitigations</h3>
+                                <div class="risk-breakdown-row">
+                                    <div class="risk-box red-bg">
+                                        <h4>High Risk (&gt;75%)</h4>
+                                        <p>Automatic account lockout, notification to CSO, immediate security audit.</p>
+                                    </div>
+                                    <div class="risk-box orange-bg">
+                                        <h4>Med Risk (40-75%)</h4>
+                                        <p>Trigger MFA confirmation, limit access to confidential systems, highlight on active feed.</p>
+                                    </div>
+                                    <div class="risk-box green-bg">
+                                        <h4>Low Risk (&lt;40%)</h4>
+                                        <p>Standard monitoring, baseline access patterns, normal logs accumulation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Report Generator -->
+                        <div class="analytics-right-panel shadow-card">
+                            <h3>Security Report Generator</h3>
+                            <p class="desc-text">Generate official compliance audits ready for RBI or internal bank audits.</p>
+                            <form id="report-generator-form" class="report-form" onsubmit="event.preventDefault();">
+                                <div class="form-group-row">
+                                    <div class="form-input-box">
+                                        <label for="report-type">Report Cycle</label>
+                                        <select id="report-type" class="styled-select w-100">
+                                            <option value="daily">Daily Security Report</option>
+                                            <option value="weekly">Weekly Security Report</option>
+                                            <option value="incident">Critical Incident Log Dossier</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-input-box">
+                                        <label for="report-format">Format</label>
+                                        <select id="report-format" class="styled-select w-100">
+                                            <option value="pdf">Secured PDF Document</option>
+                                            <option value="csv">Audit trail CSV</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-input-box margin-top-15">
+                                    <label for="report-dept">Department Scope</label>
+                                    <select id="report-dept" class="styled-select w-100">
+                                        <option value="all">All Departments Combined</option>
+                                        <option value="treasury">Treasury & Forex Branch</option>
+                                        <option value="it">IT Administration Core</option>
+                                        <option value="retail">Retail Banking Divisions</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-input-box margin-top-15">
+                                    <label>Include Datasets</label>
+                                    <div class="checkbox-options-grid">
+                                        <label class="checkbox-lbl"><input type="checkbox" checked id="inc-alerts"> AI Anomalies & Alert History</label>
+                                        <label class="checkbox-lbl"><input type="checkbox" checked id="inc-blocked"> Locked/Blocked User Details</label>
+                                        <label class="checkbox-lbl"><input type="checkbox" checked id="inc-audit"> Full Crypto Audit Trail Logs</label>
+                                        <label class="checkbox-lbl"><input type="checkbox" id="inc-radar"> Department Risk Charts</label>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary margin-top-20 w-100" id="generate-report-btn">
+                                    <i class="fa-solid fa-file-pdf"></i> Compile & Download Security Report
+                                </button>
+                            </form>
+
+                            <div class="report-preview-container hidden" id="report-preview-box">
+                                <div class="preview-header">
+                                    <h4>Report Compiled Successfully</h4>
+                                    <button class="btn-text-close" id="close-preview-btn">&times;</button>
+                                </div>
+                                <div class="preview-text-box" id="preview-text-content">
+                                    <!-- Dynamic text report mock -->
+                                </div>
+                                <button class="btn btn-secondary-action w-100 margin-top-10" id="print-report-btn">
+                                    <i class="fa-solid fa-print"></i> Send to Secure Printer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Admin Panel -->
+                <section id="admin" class="tab-content">
+                    <div class="section-header-filters">
+                        <div class="section-title-area">
+                            <h2>Security Administrator Console</h2>
+                            <p class="section-subtitle">Manage user privileges, configure AI sensitivity parameters, and approve unlock overrides</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-grid-layout">
+                        <!-- Left Panel: AI Config -->
+                        <div class="admin-control-box shadow-card">
+                            <h3>AI Core Controls</h3>
+                            <p class="desc-text">Tune neural network thresholds. Higher sensitivity detects subtle anomalies but may increase verification checks.</p>
+                            
+                            <div class="slider-control-group margin-top-20">
+                                <div class="slider-header">
+                                    <span>AI Sensitivity Threshold</span>
+                                    <span class="slider-val" id="sensitivity-val">75%</span>
+                                </div>
+                                <input type="range" class="styled-slider" min="50" max="95" value="75" id="slider-sensitivity">
+                                <div class="slider-labels">
+                                    <span>Relaxed (50%)</span>
+                                    <span>Standard (75%)</span>
+                                    <span>Strict Security (95%)</span>
+                                </div>
+                            </div>
+
+                            <div class="features-list-settings margin-top-20">
+                                <h4>Automatic Countermeasures</h4>
+                                <div class="toggle-control-item">
+                                    <div class="toggle-info">
+                                        <span class="title">Automatic Account Lockout</span>
+                                        <span class="desc">Instantly locks account when risk score exceeds threshold</span>
+                                    </div>
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" checked id="auto-lockout-toggle">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="toggle-control-item">
+                                    <div class="toggle-info">
+                                        <span class="title">Require MFA Prompt on Med-Risk</span>
+                                        <span class="desc">Forced 2FA verification code on suspicious files downloads</span>
+                                    </div>
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" checked id="mfa-toggle">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="toggle-control-item">
+                                    <div class="toggle-info">
+                                        <span class="title">GPS Geofencing Checks</span>
+                                        <span class="desc">Auto-flags logins outside Maharashtra regional sub-nets</span>
+                                    </div>
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="geofence-toggle">
+                                        <span class="switch-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Lock/Unlock Access Approvals -->
+                        <div class="admin-control-box shadow-card">
+                            <h3>Blocked Employee Restorations</h3>
+                            <p class="desc-text">Review and unlock accounts locked by the AI Anomaly response engine.</p>
+                            
+                            <div class="blocked-accounts-list" id="blocked-list-container">
+                                <!-- Blocked accounts listing -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-recommendations-row margin-top-20 shadow-card">
+                        <h3>SecureInsiderAI Smart Recommendations</h3>
+                        <div class="recommendations-container-grid">
+                            <div class="rec-card alert-high">
+                                <div class="rec-icon"><i class="fa-solid fa-key"></i></div>
+                                <h4>Rotate IT Admin Credentials</h4>
+                                <p>AI detected 3 credentials used from same subnet in short succession. Recommendation: Revoke and rotate SSH keys.</p>
+                            </div>
+                            <div class="rec-card alert-warning">
+                                <div class="rec-icon"><i class="fa-solid fa-server"></i></div>
+                                <h4>Restrict Treasury Downloads</h4>
+                                <p>Unusual daily volume spikes detected in Wealth database. Recommendation: Enforce a maximum daily file copy limit of 100MB.</p>
+                            </div>
+                            <div class="rec-card alert-safe">
+                                <div class="rec-icon"><i class="fa-solid fa-circle-check"></i></div>
+                                <h4>MFA Coverage Complete</h4>
+                                <p>All active employees successfully completed primary and secondary verification setups this cycle. AI health rating is excellent.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: Secure Audit Logs -->
+                <section id="audit" class="tab-content">
+                    <div class="section-header-filters">
+                        <div class="section-title-area">
+                            <h2>Immutable Security Audit Trail</h2>
+                            <p class="section-subtitle">Cryptographically hash-linked ledger recording all administrative and user logins/actions</p>
+                        </div>
+                        <button class="btn btn-secondary-action" id="clear-logs-btn">
+                            <i class="fa-solid fa-trash-can"></i> Clear Screen
+                        </button>
+                    </div>
+
+                    <div class="terminal-container shadow-card">
+                        <div class="terminal-header">
+                            <div class="terminal-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <div class="terminal-title">secureinsider_audit_ledger.log</div>
+                            <div class="terminal-status"><i class="fa-solid fa-circle-nodes"></i> ENCRYPTED (SHA-256)</div>
+                        </div>
+                        <div class="terminal-body" id="audit-terminal-body">
+                            <!-- Terminal logs written here -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <p>SecureInsiderAI - AI-Based Insider Threat Detection System for Banking.</p>
+                <div class="footer-meta">
+                    <span>Maharashtra Banking Cyber-Shield Demo</span> | <span>Security Compliance: RBI Circular v3</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Alert Modal Notification (Top center / Global popup) -->
+    <div class="notification-toast toast-hidden" id="global-toast">
+        <div class="toast-content">
+            <i class="fa-solid fa-circle-info" id="toast-icon"></i>
+            <span id="toast-message">User account blocked successfully!</span>
+        </div>
+    </div>
+
+    <!-- Custom JS Script -->
+    <script src="app.js"></script>
+</body>
+</html>
